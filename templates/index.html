@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Rust + HMTX sample</title>
+        <script src="https://unpkg.com/htmx.org@1.9.11"></script>
     </head>
     <body>
         <div style="display: flex; flex-direction: column">
@@ -10,10 +11,12 @@
             <div>
                 <ul>
                     {% for todo in todos %}
-                        <li>
+                        <li id="todo-{{ todo.id }}-li">
                             <div style="display: flex; flex-direction: row">
                                 {{ todo|safe }}
-                                <button>remove</button>
+                                <button hx-delete="/api/todo/{{ todo.id }}"
+                                        hx-swap="outerHTML"
+                                        hx-target="#todo-{{ todo.id }}-li">remove</button>
                             </div>
                         </li>
                     {% endfor %}
