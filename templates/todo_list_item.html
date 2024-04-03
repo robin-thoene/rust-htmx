@@ -1,0 +1,8 @@
+<li id="todo-{{ todo.id }}-li">
+    <div style="display: flex; flex-direction: row">
+        {{ todo|safe }}
+        <button hx-delete="/api/todo/{{ todo.id }}"
+                hx-swap="outerHTML"
+                hx-target="#todo-{{ todo.id }}-li">x</button>
+    </div>
+</li>

@@ -9,23 +9,16 @@
             <h1>Generic and unimpressive TODO app</h1>
             <h2>Here are your TODO's</h2>
             <div>
-                <ul>
-                    {% for todo in todos %}
-                        <li id="todo-{{ todo.id }}-li">
-                            <div style="display: flex; flex-direction: row">
-                                {{ todo|safe }}
-                                <button hx-delete="/api/todo/{{ todo.id }}"
-                                        hx-swap="outerHTML"
-                                        hx-target="#todo-{{ todo.id }}-li">remove</button>
-                            </div>
-                        </li>
-                    {% endfor %}
+                <ul id="todo-list">
+                    {% for todo_list_item in todo_list_items %}{{ todo_list_item|safe }}{% endfor %}
                 </ul>
             </div>
             <h2>Add another TODO</h2>
             <div>
-                <input type="text" />
-                <button>add</button>
+                <form hx-post="/api/todo" hx-swap="beforeend" hx-target="#todo-list">
+                    <input id="todo-title-input" type="text" name="title" required>
+                    <button type="submit">add</button>
+                </form>
             </div>
         </div>
     </body>

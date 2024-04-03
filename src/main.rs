@@ -6,9 +6,10 @@ use std::{
 use askama_axum::Template;
 use axum::{
     extract::Path,
-    routing::{delete, get},
-    Extension, Router,
+    routing::{delete, get, post},
+    Extension, Form, Router,
 };
+use serde::Deserialize;
 use uuid::Uuid;
 
 #[derive(Template)]
@@ -21,7 +22,13 @@ struct TodoTemplate {
 #[derive(Template)]
 #[template(path = "index.html")]
 struct IndexTemplate {
-    todos: Vec<TodoTemplate>,
+    todo_list_items: Vec<TodoListItemTemplate>,
+}
+
+#[derive(Template)]
+#[template(path = "todo_list_item.html")]
+struct TodoListItemTemplate {
+    todo: TodoTemplate,
 }
 
 struct InMemDb {
@@ -29,21 +36,45 @@ struct InMemDb {
 }
 
 async fn index(db: Extension<Arc<Mutex<InMemDb>>>) -> IndexTemplate {
-    let todos =
+    let todo_list_items =
         db.0.lock()
             .unwrap()
             .todos
             .iter()
-            .map(|(key, val)| TodoTemplate {
-                id: key.to_string(),
-                title: val.to_string(),
+            .map(|(key, val)| TodoListItemTemplate {
+                todo: TodoTemplate {
+                    id: key.to_string(),
+                    title: val.to_string(),
+                },
             })
             .collect();
-    IndexTemplate { todos }
+    IndexTemplate { todo_list_items }
 }
 
 async fn delete_todo(db: Extension<Arc<Mutex<InMemDb>>>, Path(id): Path<String>) {
     db.0.lock().unwrap().todos.remove(&id);
+}
+
+#[derive(Deserialize)]
+struct CreateForm {
+    title: String,
+}
+
+async fn create_todo(
+    db: Extension<Arc<Mutex<InMemDb>>>,
+    Form(create_form): Form<CreateForm>,
+) -> TodoListItemTemplate {
+    let id = Uuid::new_v4().to_string();
+    db.0.lock()
+        .unwrap()
+        .todos
+        .insert(id.clone(), create_form.title.clone());
+    TodoListItemTemplate {
+        todo: TodoTemplate {
+            id,
+            title: create_form.title,
+        },
+    }
 }
 
 #[tokio::main]
@@ -63,6 +94,7 @@ async fn main() {
     let app = Router::new()
         .route("/", get(index))
         .route("/api/todo/:id", delete(delete_todo))
+        .route("/api/todo", post(create_todo))
         .layer(Extension(Arc::clone(&db)));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
