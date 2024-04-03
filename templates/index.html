@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rust + HMTX sample</title>
+    </head>
+    <body>
+        <div style="display: flex; flex-direction: column">
+            <h1>Generic and unimpressive TODO app</h1>
+            <h2>Here are your TODO's</h2>
+            <div>
+                <ul>
+                    {% for todo in todos %}
+                        <li>
+                            <div style="display: flex; flex-direction: row">
+                                {{ todo|safe }}
+                                <button>remove</button>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <h2>Add another TODO</h2>
+            <div>
+                <input type="text" />
+                <button>add</button>
+            </div>
+        </div>
+    </body>
+</html>
