@@ -21,5 +21,5 @@ npx tailwindcss -i ./style/tailwind.css -o ./static/global.css --watch
 To start the development server
 
 ```sh
-cargo run
+cargo watch -w . -x run
 ```
