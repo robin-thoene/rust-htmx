@@ -10,8 +10,16 @@ therefore this application is **not meant to be deployed in production**!.
 
 ## Running the project
 
-Just navigate into the project root directory and execute:
+Navigate into the project root directory and execute:
 
+To watch for tailwind changes
+
+```sh
+npx tailwindcss -i ./style/tailwind.css -o ./static/global.css --watch
 ```
+
+To start the development server
+
+```sh
 cargo run
 ```
