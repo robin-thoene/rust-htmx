@@ -10,6 +10,7 @@ use axum::{
     Extension, Form, Router,
 };
 use serde::Deserialize;
+use tower_http::services::ServeDir;
 use uuid::Uuid;
 
 #[derive(Template)]
@@ -95,8 +96,11 @@ async fn main() {
         .route("/", get(index))
         .route("/api/todo/:id", delete(delete_todo))
         .route("/api/todo", post(create_todo))
-        .layer(Extension(Arc::clone(&db)));
+        .layer(Extension(Arc::clone(&db)))
+        .nest_service("/static", ServeDir::new("static/"));
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:42069")
+        .await
+        .unwrap();
     axum::serve(listener, app).await.unwrap();
 }

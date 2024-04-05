@@ -1,24 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html class="min-h-screen w-screen">
     <head>
         <title>Rust + HMTX sample</title>
         <script src="https://unpkg.com/htmx.org@1.9.11"></script>
+        <link rel="stylesheet" type="text/css" href="/static/global.css" />
     </head>
-    <body>
-        <div style="display: flex; flex-direction: column">
-            <h1>Generic and unimpressive TODO app</h1>
-            <h2>Here are your TODO's</h2>
-            <div>
-                <ul id="todo-list">
-                    {% for todo_list_item in todo_list_items %}{{ todo_list_item|safe }}{% endfor %}
-                </ul>
-            </div>
-            <h2>Add another TODO</h2>
-            <div>
-                <form hx-post="/api/todo" hx-swap="beforeend" hx-target="#todo-list">
-                    <input id="todo-title-input" type="text" name="title" required>
-                    <button type="submit">add</button>
-                </form>
+    <body class="flex min-h-screen w-full justify-center">
+        <div class="max-w-7xl">
+            <div class="flex flex-col">
+                <h1>
+                    <u>Generic and unimpressive TODO app</u>
+                </h1>
+                <h2>Add another TODO</h2>
+                <div class="mb-6">
+                    <form class="flex w-full"
+                          hx-post="/api/todo"
+                          hx-swap="beforeend"
+                          hx-target="#todo-list">
+                        <input class="w-full"
+                               id="todo-title-input"
+                               type="text"
+                               name="title"
+                               required>
+                        <button class="text-white ml-4" type="submit">+</button>
+                    </form>
+                </div>
+                <h2>Here are your TODO's</h2>
+                <div>
+                    <ul id="todo-list">
+                        {% for todo_list_item in todo_list_items %}{{ todo_list_item|safe }}{% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
     </body>

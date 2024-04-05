@@ -1,7 +1,8 @@
 <li id="todo-{{ todo.id }}-li">
-    <div style="display: flex; flex-direction: row">
+    <div class="flex flex-row justify-between py-1 items-center">
         {{ todo|safe }}
-        <button hx-delete="/api/todo/{{ todo.id }}"
+        <button class="text-white"
+                hx-delete="/api/todo/{{ todo.id }}"
                 hx-swap="outerHTML"
                 hx-target="#todo-{{ todo.id }}-li">x</button>
     </div>
