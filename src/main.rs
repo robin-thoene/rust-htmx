@@ -1,6 +1,7 @@
 use std::{
     collections::HashMap,
     sync::{Arc, Mutex},
+    thread, time,
 };
 
 use askama_axum::Template;
@@ -65,6 +66,8 @@ async fn create_todo(
     db: Extension<Arc<Mutex<InMemDb>>>,
     Form(create_form): Form<CreateForm>,
 ) -> TodoListItemTemplate {
+    let ten_millis = time::Duration::from_millis(3000);
+    thread::sleep(ten_millis);
     let id = Uuid::new_v4().to_string();
     db.0.lock()
         .unwrap()

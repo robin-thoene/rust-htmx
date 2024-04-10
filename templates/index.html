@@ -14,16 +14,21 @@
                 <h2>Add another TODO</h2>
                 <div class="mb-6">
                     <form class="flex w-full"
+                          id="form"
                           hx-post="/api/todo"
                           hx-swap="beforeend"
-                          hx-target="#todo-list">
+                          hx-target="#todo-list"
+                          hx-disabled-elt="input, button"
+                          hx-on::after-request="clearInputs()"
+                          hx-indicator="#loading-indicator">
                         <input class="w-full"
                                id="todo-title-input"
                                type="text"
                                name="title"
                                required>
-                        <button class="text-white ml-4" type="submit">+</button>
+                        <button class="text-white ml-4 disabled:opacity-60" type="submit">+</button>
                     </form>
+                    <div id="loading-indicator" class="htmx-indicator">loading ...</div>
                 </div>
                 <h2>Here are your TODO's</h2>
                 <div>
@@ -33,5 +38,10 @@
                 </div>
             </div>
         </div>
+        <script>
+            function clearInputs() {
+                document.getElementById('form').reset();
+            }
+        </script>
     </body>
 </html>
